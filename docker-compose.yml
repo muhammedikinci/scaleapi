@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: scaleflix
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+networks:
+  default:
+volumes:
+  data:
