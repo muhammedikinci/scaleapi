@@ -1,5 +1,7 @@
 package dtos
 
+import "golang.org/x/crypto/bcrypt"
+
 type LoginResponse struct {
 	Status   bool   `json:"status"`
 	Message  string `json:"message"`
@@ -23,4 +25,15 @@ func (lr LoginRegisterRequest) Validate() (string, bool) {
 	}
 
 	return "", true
+}
+
+func (rr *LoginRegisterRequest) HashPassword() {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(rr.Password), 14)
+
+	rr.Password = string(bytes)
+}
+
+func (rr LoginRegisterRequest) CheckPasswordHash(hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(rr.Password))
+	return err == nil
 }

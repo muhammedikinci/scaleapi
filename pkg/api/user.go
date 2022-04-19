@@ -29,9 +29,16 @@ func (ua UserAPI) Login(user dtos.LoginRegisterRequest) (dtos.LoginResponse, err
 		}, nil
 	}
 
-	result, err := ua.Repository.Find(user.Username, user.Password)
+	result, err := ua.Repository.FindByUserName(user.Username)
 
 	if err != nil {
+		return dtos.LoginResponse{
+			Status:  false,
+			Message: "User not found",
+		}, nil
+	}
+
+	if !user.CheckPasswordHash(result.Password) {
 		return dtos.LoginResponse{
 			Status:  false,
 			Message: "Credentials does not match",
@@ -64,6 +71,8 @@ func (ua UserAPI) Register(user dtos.LoginRegisterRequest) (dtos.RegisterRespons
 			Message: v,
 		}, nil
 	}
+
+	user.HashPassword()
 
 	_, err := ua.Repository.AddUser(user.Username, user.Password)
 
