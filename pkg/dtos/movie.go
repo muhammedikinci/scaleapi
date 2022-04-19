@@ -3,6 +3,7 @@ package dtos
 import "github.com/muhammedikinci/scaleapi/pkg/models"
 
 type MovieRequest struct {
+	ID          int     `json:"-"`
 	Title       string  `json:"title"`
 	Image       string  `json:"image"`
 	Description string  `json:"description"`
@@ -26,18 +27,5 @@ func (mr MovieRequest) Validate() (string, bool) {
 }
 
 func (mr MovieRequest) GetMovieModel() models.Movie {
-	return models.Movie{
-		Title:       mr.Title,
-		Image:       mr.Image,
-		Description: mr.Description,
-		Rating:      mr.Rating,
-		ReleaseDate: mr.ReleaseDate,
-		Director:    mr.Director,
-		Writer:      mr.Writer,
-		Stars:       mr.Stars,
-		Duration:    mr.Duration,
-		IMDBID:      mr.IMDBID,
-		Year:        mr.Year,
-		Genre:       mr.Genre,
-	}
+	return models.Movie(mr)
 }
