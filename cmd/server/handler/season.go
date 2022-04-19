@@ -52,7 +52,10 @@ func (sh seasonHandler) FindById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "id parameter is not valid",
+		})
 	}
 
 	season, err := sh.api.FindById(id)
