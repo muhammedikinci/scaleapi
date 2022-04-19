@@ -22,7 +22,9 @@ func NewApi(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*api, error
 		return nil, err
 	}
 
-	db.AutoMigrate(&models.Genre{}, &models.Movie{}, &models.Serie{}, &models.Season{}, &models.Episode{}, &models.User{})
+	db.AutoMigrate(&models.Movie{}, &models.Serie{}, &models.Season{}, &models.Episode{}, &models.User{})
+
+	db.Session(&gorm.Session{FullSaveAssociations: true})
 
 	return &api{
 		errorLog: errorLog,

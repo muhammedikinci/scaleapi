@@ -27,6 +27,8 @@ func main() {
 	e := echo.New()
 
 	e.GET("/movies", movieHandler.GetAllMovies)
+	e.GET("/movies/:id", movieHandler.FindById)
+	e.POST("/movies", movieHandler.AddMovie)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
