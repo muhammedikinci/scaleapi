@@ -16,3 +16,11 @@ type RegisterResponse struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
 }
+
+func (lr LoginRegisterRequest) Validate() (string, bool) {
+	if len(lr.Username) < 3 || len(lr.Password) < 3 {
+		return "Username and password can be minimum 4 characters", false
+	}
+
+	return "", true
+}

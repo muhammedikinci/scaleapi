@@ -22,6 +22,13 @@ type UserAPI struct {
 var hmacSampleSecret []byte = []byte("very-secret")
 
 func (ua UserAPI) Login(user dtos.LoginRegisterRequest) (dtos.LoginResponse, error) {
+	if v, ok := user.Validate(); !ok {
+		return dtos.LoginResponse{
+			Status:  false,
+			Message: v,
+		}, nil
+	}
+
 	result, err := ua.Repository.Find(user.Username, user.Password)
 
 	if err != nil {
@@ -51,6 +58,13 @@ func (ua UserAPI) Login(user dtos.LoginRegisterRequest) (dtos.LoginResponse, err
 }
 
 func (ua UserAPI) Register(user dtos.LoginRegisterRequest) (dtos.RegisterResponse, error) {
+	if v, ok := user.Validate(); !ok {
+		return dtos.RegisterResponse{
+			Status:  false,
+			Message: v,
+		}, nil
+	}
+
 	_, err := ua.Repository.AddUser(user.Username, user.Password)
 
 	if err != nil {
