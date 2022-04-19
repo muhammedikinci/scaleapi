@@ -1,4 +1,4 @@
-package api
+package gormrepo
 
 import (
 	"database/sql"
@@ -9,12 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type api struct {
+type repository struct {
 	Movie movieRepository
 	Serie serieRepository
+	User  userRepository
 }
 
-func NewApi(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*api, error) {
+func NewRepository(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*repository, error) {
 	db, err := openDB(*dsn)
 
 	if err != nil {
@@ -25,12 +26,16 @@ func NewApi(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*api, error
 
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 
-	return &api{
+	return &repository{
 		Movie: movieRepository{
 			errorLog: errorLog,
 			db:       db,
 		},
 		Serie: serieRepository{
+			errorLog: errorLog,
+			db:       db,
+		},
+		User: userRepository{
 			errorLog: errorLog,
 			db:       db,
 		},

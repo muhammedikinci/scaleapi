@@ -1,4 +1,4 @@
-package api
+package gormrepo
 
 import (
 	"log"
