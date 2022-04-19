@@ -5,12 +5,13 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/muhammedikinci/scaleapi/pkg/dtos"
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
 type movieApi interface {
 	GetAllMovies() ([]models.Movie, error)
-	AddMovie(models.Movie) (models.Movie, error)
+	AddMovie(movieDto dtos.MovieRequest) (models.Movie, string, error)
 	FindById(id int) (models.Movie, error)
 }
 
@@ -35,16 +36,23 @@ func (mh movieHandler) GetAllMovies(c echo.Context) error {
 }
 
 func (mh movieHandler) AddMovie(c echo.Context) error {
-	m := new(models.Movie)
+	m := new(dtos.MovieRequest)
 
 	if err := c.Bind(m); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	movie, err := mh.api.AddMovie(*m)
+	movie, message, err := mh.api.AddMovie(*m)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	if message != "" {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: message,
+		})
 	}
 
 	return c.JSON(http.StatusOK, movie)

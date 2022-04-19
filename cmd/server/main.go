@@ -24,11 +24,15 @@ func main() {
 		panic(err)
 	}
 
+	movieApi := api.MovieAPI{
+		Repository: repository.Movie,
+	}
+
 	userApi := api.UserAPI{
 		Repository: repository.User,
 	}
 
-	movieHandler := handler.NewMovieHandler(repository.Movie)
+	movieHandler := handler.NewMovieHandler(movieApi)
 	serieHandler := handler.NewSerieHandler(repository.Serie)
 	userHandler := handler.NewUserHandler(userApi)
 

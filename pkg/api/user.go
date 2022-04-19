@@ -10,7 +10,6 @@ import (
 )
 
 type userRepository interface {
-	Find(username, password string) (models.User, error)
 	FindByUserName(username string) (models.User, error)
 	AddUser(username, password string) (models.User, error)
 }
