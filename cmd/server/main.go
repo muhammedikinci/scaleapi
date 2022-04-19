@@ -48,10 +48,12 @@ func main() {
 	e := echo.New()
 
 	e.GET("/movies", movieHandler.GetAllMovies, custom_middleware.UserCheck(userApi))
+	e.GET("/movies/filter", movieHandler.Filter, custom_middleware.UserCheck(userApi))
 	e.GET("/movies/:id", movieHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.POST("/movies", movieHandler.AddMovie, custom_middleware.AdminCheck(userApi))
 
 	e.GET("/series", serieHandler.GetAllSeries, custom_middleware.UserCheck(userApi))
+	e.GET("/series/filter", serieHandler.Filter, custom_middleware.UserCheck(userApi))
 	e.GET("/series/:id", serieHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.POST("/series", serieHandler.AddSerie, custom_middleware.AdminCheck(userApi))
 

@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strings"
+
 	"github.com/muhammedikinci/scaleapi/pkg/dtos"
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
@@ -9,6 +11,7 @@ type movieRepository interface {
 	GetAllMovies() ([]models.Movie, error)
 	AddMovie(models.Movie) (models.Movie, error)
 	FindById(id int) (models.Movie, error)
+	Filter(title string, genre string) ([]models.Movie, error)
 }
 
 type MovieAPI struct {
@@ -35,4 +38,8 @@ func (ma MovieAPI) AddMovie(movieDto dtos.MovieRequest) (models.Movie, string, e
 
 func (ma MovieAPI) FindById(id int) (models.Movie, error) {
 	return ma.Repository.FindById(id)
+}
+
+func (ma MovieAPI) Filter(title, genre string) ([]models.Movie, error) {
+	return ma.Repository.Filter(strings.ToLower(title), strings.ToLower(genre))
 }

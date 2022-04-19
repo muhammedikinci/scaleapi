@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strings"
+
 	"github.com/muhammedikinci/scaleapi/pkg/dtos"
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
@@ -39,5 +41,5 @@ func (sa SerieAPI) FindById(id int) (models.Serie, error) {
 }
 
 func (sa SerieAPI) Filter(title, genre string) ([]models.Serie, error) {
-	return sa.Repository.Filter(title, genre)
+	return sa.Repository.Filter(strings.ToLower(title), strings.ToLower(genre))
 }

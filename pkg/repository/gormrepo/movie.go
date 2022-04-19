@@ -48,3 +48,16 @@ func (mr movieRepository) FindById(id int) (models.Movie, error) {
 
 	return movie, nil
 }
+
+func (mr movieRepository) Filter(title string, genre string) ([]models.Movie, error) {
+	var movies []models.Movie
+
+	result := mr.db.Where("LOWER(title) LIKE ? AND LOWER(genre) LIKE ?", wrapLike(title), wrapLike(genre)).Find(&movies)
+
+	if result.Error != nil {
+		mr.errorLog.Println(result.Error)
+		return nil, result.Error
+	}
+
+	return movies, nil
+}
