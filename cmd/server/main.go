@@ -6,8 +6,10 @@ import (
 	"os"
 
 	"github.com/labstack/echo/v4"
+	"github.com/muhammedikinci/scaleapi/cmd/server/custom_middleware"
 	"github.com/muhammedikinci/scaleapi/cmd/server/handler"
 	"github.com/muhammedikinci/scaleapi/pkg/api"
+	"github.com/muhammedikinci/scaleapi/pkg/repository/gormrepo"
 )
 
 func main() {
@@ -16,24 +18,32 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
 
-	api, err := api.NewApi(errorLog, infoLog, dsn)
+	repository, err := gormrepo.NewRepository(errorLog, infoLog, dsn)
 
 	if err != nil {
 		panic(err)
 	}
 
-	movieHandler := handler.NewMovieHandler(api.Movie)
-	serieHandler := handler.NewSerieHandler(api.Serie)
+	userApi := api.UserAPI{
+		Repository: repository.User,
+	}
+
+	movieHandler := handler.NewMovieHandler(repository.Movie)
+	serieHandler := handler.NewSerieHandler(repository.Serie)
+	userHandler := handler.NewUserHandler(userApi)
 
 	e := echo.New()
 
-	e.GET("/movies", movieHandler.GetAllMovies)
-	e.GET("/movies/:id", movieHandler.FindById)
-	e.POST("/movies", movieHandler.AddMovie)
+	e.GET("/movies", movieHandler.GetAllMovies, custom_middleware.UserCheck(userApi))
+	e.GET("/movies/:id", movieHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.POST("/movies", movieHandler.AddMovie, custom_middleware.AdminCheck(userApi))
 
-	e.GET("/series", serieHandler.GetAllSeries)
-	e.GET("/series/:id", serieHandler.FindById)
-	e.POST("/series", serieHandler.AddSerie)
+	e.GET("/series", serieHandler.GetAllSeries, custom_middleware.UserCheck(userApi))
+	e.GET("/series/:id", serieHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.POST("/series", serieHandler.AddSerie, custom_middleware.AdminCheck(userApi))
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.POST("/login", userHandler.Login)
+	e.POST("/register", userHandler.Register)
+
+	e.Logger.Fatal(e.Start(":8080"))
 }
