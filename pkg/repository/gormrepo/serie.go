@@ -15,7 +15,7 @@ type serieRepository struct {
 func (sr serieRepository) GetAllSeries() ([]models.Serie, error) {
 	var series []models.Serie
 
-	result := sr.db.Find(&series)
+	result := sr.db.Preload("Seasons").Find(&series)
 
 	if result.Error != nil {
 		sr.errorLog.Println(result.Error)
@@ -39,7 +39,7 @@ func (sr serieRepository) AddSerie(s models.Serie) (models.Serie, error) {
 func (sr serieRepository) FindById(id int) (models.Serie, error) {
 	var serie models.Serie
 
-	result := sr.db.First(&serie, "id = ?", id)
+	result := sr.db.Preload("Seasons").First(&serie, "id = ?", id)
 
 	if result.Error != nil {
 		sr.errorLog.Println(result.Error)
@@ -52,7 +52,7 @@ func (sr serieRepository) FindById(id int) (models.Serie, error) {
 func (sr serieRepository) Filter(title string, genre string) ([]models.Serie, error) {
 	var series []models.Serie
 
-	result := sr.db.Where("title LIKE ? AND genre LIKE ?", wrapLike(title), wrapLike(genre)).Find(&series)
+	result := sr.db.Where("title LIKE ? AND genre LIKE ?", wrapLike(title), wrapLike(genre)).Preload("Seasons").Find(&series)
 
 	if result.Error != nil {
 		sr.errorLog.Println(result.Error)

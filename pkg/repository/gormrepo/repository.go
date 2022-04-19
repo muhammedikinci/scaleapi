@@ -10,9 +10,10 @@ import (
 )
 
 type repository struct {
-	Movie movieRepository
-	Serie serieRepository
-	User  userRepository
+	Movie  movieRepository
+	Serie  serieRepository
+	User   userRepository
+	Season seasonRepository
 }
 
 func NewRepository(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*repository, error) {
@@ -36,6 +37,10 @@ func NewRepository(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*rep
 			db:       db,
 		},
 		User: userRepository{
+			errorLog: errorLog,
+			db:       db,
+		},
+		Season: seasonRepository{
 			errorLog: errorLog,
 			db:       db,
 		},

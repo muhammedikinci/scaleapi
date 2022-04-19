@@ -32,9 +32,18 @@ func main() {
 		Repository: repository.User,
 	}
 
+	serieApi := api.SerieAPI{
+		Repository: repository.Serie,
+	}
+
+	seasonApi := api.SeasonAPI{
+		Repository: repository.Season,
+	}
+
 	movieHandler := handler.NewMovieHandler(movieApi)
-	serieHandler := handler.NewSerieHandler(repository.Serie)
+	serieHandler := handler.NewSerieHandler(serieApi)
 	userHandler := handler.NewUserHandler(userApi)
+	seasonHandler := handler.NewSeasonHandler(seasonApi)
 
 	e := echo.New()
 
@@ -45,6 +54,11 @@ func main() {
 	e.GET("/series", serieHandler.GetAllSeries, custom_middleware.UserCheck(userApi))
 	e.GET("/series/:id", serieHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.POST("/series", serieHandler.AddSerie, custom_middleware.AdminCheck(userApi))
+
+	e.GET("/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.GET("/series/:serieId/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.GET("/series/:serieId/seasons", seasonHandler.FindAllSeasonsInSerie, custom_middleware.UserCheck(userApi))
+	e.POST("/seasons", seasonHandler.AddSeason, custom_middleware.AdminCheck(userApi))
 
 	e.POST("/login", userHandler.Login)
 	e.POST("/register", userHandler.Register)

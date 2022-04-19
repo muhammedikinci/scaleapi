@@ -5,12 +5,13 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/muhammedikinci/scaleapi/pkg/dtos"
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
 type serieApi interface {
 	GetAllSeries() ([]models.Serie, error)
-	AddSerie(models.Serie) (models.Serie, error)
+	AddSerie(dtos.SerieRequest) (models.Serie, string, error)
 	FindById(id int) (models.Serie, error)
 	Filter(title string, genre string) ([]models.Serie, error)
 }
@@ -36,16 +37,23 @@ func (sh serieHandler) GetAllSeries(c echo.Context) error {
 }
 
 func (sh serieHandler) AddSerie(c echo.Context) error {
-	s := new(models.Serie)
+	s := new(dtos.SerieRequest)
 
 	if err := c.Bind(s); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	serie, err := sh.api.AddSerie(*s)
+	serie, message, err := sh.api.AddSerie(*s)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	if message != "" {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: message,
+		})
 	}
 
 	return c.JSON(http.StatusOK, serie)
