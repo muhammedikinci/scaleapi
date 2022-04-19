@@ -10,9 +10,8 @@ import (
 )
 
 type api struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	db       *gorm.DB
+	Movie movieRepository
+	Serie serieRepository
 }
 
 func NewApi(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*api, error) {
@@ -27,9 +26,14 @@ func NewApi(errorLog *log.Logger, infoLog *log.Logger, dsn *string) (*api, error
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 
 	return &api{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		db:       db,
+		Movie: movieRepository{
+			errorLog: errorLog,
+			db:       db,
+		},
+		Serie: serieRepository{
+			errorLog: errorLog,
+			db:       db,
+		},
 	}, nil
 }
 

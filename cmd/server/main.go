@@ -22,13 +22,18 @@ func main() {
 		panic(err)
 	}
 
-	movieHandler := handler.NewMovieHandler(api)
+	movieHandler := handler.NewMovieHandler(api.Movie)
+	serieHandler := handler.NewSerieHandler(api.Serie)
 
 	e := echo.New()
 
 	e.GET("/movies", movieHandler.GetAllMovies)
 	e.GET("/movies/:id", movieHandler.FindById)
 	e.POST("/movies", movieHandler.AddMovie)
+
+	e.GET("/series", serieHandler.GetAllSeries)
+	e.GET("/series/:id", serieHandler.FindById)
+	e.POST("/series", serieHandler.AddSerie)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
