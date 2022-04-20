@@ -15,8 +15,8 @@ type SeasonRequest struct {
 }
 
 func (sr SeasonRequest) Validate() (string, bool) {
-	if sr.Title == "" || sr.Description == "" {
-		return "Title and Description cannot be empty", false
+	if sr.Title == "" {
+		return "Title cannot be empty", false
 	}
 
 	return "", true

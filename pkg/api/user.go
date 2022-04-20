@@ -76,6 +76,15 @@ func (ua UserAPI) Register(user dtos.LoginRegisterRequest) (dtos.RegisterRespons
 		}, nil
 	}
 
+	userCheck, _ := ua.Repository.FindByUserName(user.Username)
+
+	if userCheck.Username != "" {
+		return dtos.RegisterResponse{
+			Status:  false,
+			Message: "Username already taken",
+		}, nil
+	}
+
 	user.HashPassword()
 
 	_, err := ua.Repository.AddUser(user.Username, user.Password)
