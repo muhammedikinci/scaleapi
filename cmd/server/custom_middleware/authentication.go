@@ -31,6 +31,7 @@ func UserCheck(api api.UserAPI) echo.MiddlewareFunc {
 			user, ok := api.CheckTokenAndGetUser(reqToken)
 
 			if ok && user.Username != "" {
+				c.Set("username", user.Username)
 				return next(c)
 			}
 

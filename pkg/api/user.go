@@ -12,10 +12,15 @@ import (
 type userRepository interface {
 	FindByUserName(username string) (models.User, error)
 	AddUser(username, password string) (models.User, error)
+	AddMovieToFavorite(username string, movie models.Movie) error
+	AddSerieToFavorite(username string, serie models.Serie) error
+	GetFavorites(username string) (models.Favorite, error)
 }
 
 type UserAPI struct {
-	Repository userRepository
+	Repository      userRepository
+	MovieRepository movieRepository
+	SerieRepository serieRepository
 }
 
 var hmacSampleSecret []byte = []byte("very-secret")
@@ -114,4 +119,32 @@ func (ua UserAPI) CheckTokenAndGetUser(tokenString string) (models.User, bool) {
 	}
 
 	return user, result
+}
+
+func (ua UserAPI) AddMovieToFavorite(username string, movieId int) bool {
+	movie, err := ua.MovieRepository.FindById(movieId)
+
+	if err != nil {
+		return false
+	}
+
+	err = ua.Repository.AddMovieToFavorite(username, movie)
+
+	return err == nil
+}
+
+func (ua UserAPI) AddSerieToFavorite(username string, serieId int) bool {
+	serie, err := ua.SerieRepository.FindById(serieId)
+
+	if err != nil {
+		return false
+	}
+
+	err = ua.Repository.AddSerieToFavorite(username, serie)
+
+	return err == nil
+}
+
+func (ua UserAPI) GetFavorites(username string) (models.Favorite, error) {
+	return ua.Repository.GetFavorites(username)
 }

@@ -29,7 +29,9 @@ func main() {
 	}
 
 	userApi := api.UserAPI{
-		Repository: repository.User,
+		Repository:      repository.User,
+		MovieRepository: repository.Movie,
+		SerieRepository: repository.Serie,
 	}
 
 	serieApi := api.SerieAPI{
@@ -74,6 +76,10 @@ func main() {
 
 	e.POST("/login", userHandler.Login)
 	e.POST("/register", userHandler.Register)
+
+	e.POST("/favorite_movie/:id", userHandler.AddMovieToFavorite, custom_middleware.UserCheck(userApi))
+	e.POST("/favorite_serie/:id", userHandler.AddSerieToFavorite, custom_middleware.UserCheck(userApi))
+	e.GET("/favorites", userHandler.GetFavorites, custom_middleware.UserCheck(userApi))
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
