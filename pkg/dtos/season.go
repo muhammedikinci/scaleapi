@@ -2,6 +2,8 @@ package dtos
 
 import "github.com/muhammedikinci/scaleapi/pkg/models"
 
+const ErrEmptyTitle = "Title cannot be empty"
+
 type SeasonRequest struct {
 	ID          int              `json:"-"`
 	Title       string           `json:"title"`
@@ -16,7 +18,7 @@ type SeasonRequest struct {
 
 func (sr SeasonRequest) Validate() (string, bool) {
 	if sr.Title == "" {
-		return "Title cannot be empty", false
+		return ErrEmptyTitle, false
 	}
 
 	return "", true

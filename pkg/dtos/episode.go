@@ -2,6 +2,8 @@ package dtos
 
 import "github.com/muhammedikinci/scaleapi/pkg/models"
 
+const ErrEmptyTitleAndDescription = "Title and Description cannot be empty"
+
 type EpisodeRequest struct {
 	ID          int     `json:"-"`
 	Title       string  `json:"title"`
@@ -18,7 +20,7 @@ type EpisodeRequest struct {
 
 func (er EpisodeRequest) Validate() (string, bool) {
 	if er.Title == "" || er.Description == "" {
-		return "Title and Description cannot be empty", false
+		return ErrEmptyTitleAndDescription, false
 	}
 
 	return "", true

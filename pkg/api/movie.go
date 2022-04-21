@@ -7,7 +7,8 @@ import (
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
-type movieRepository interface {
+//go:generate mockgen -source $GOFILE -destination ./mocks/mock_$GOFILE -package mocks
+type MovieRepository interface {
 	GetAllMovies() ([]models.Movie, error)
 	AddMovie(models.Movie) (models.Movie, error)
 	FindById(id int) (models.Movie, error)
@@ -15,7 +16,7 @@ type movieRepository interface {
 }
 
 type MovieAPI struct {
-	Repository movieRepository
+	Repository MovieRepository
 }
 
 func (ma MovieAPI) GetAllMovies() ([]models.Movie, error) {

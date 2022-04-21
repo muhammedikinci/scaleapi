@@ -20,7 +20,7 @@ type MovieRequest struct {
 
 func (mr MovieRequest) Validate() (string, bool) {
 	if mr.Title == "" || mr.Description == "" {
-		return "Title and Description cannot be empty", false
+		return ErrEmptyTitleAndDescription, false
 	}
 
 	return "", true

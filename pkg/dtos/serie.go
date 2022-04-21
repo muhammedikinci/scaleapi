@@ -20,7 +20,7 @@ type SerieRequest struct {
 
 func (sr SerieRequest) Validate() (string, bool) {
 	if sr.Title == "" || sr.Description == "" {
-		return "Title and Description cannot be empty", false
+		return ErrEmptyTitleAndDescription, false
 	}
 
 	return "", true

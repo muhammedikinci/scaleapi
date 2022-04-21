@@ -7,7 +7,8 @@ import (
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
-type serieRepository interface {
+//go:generate mockgen -source $GOFILE -destination ./mocks/mock_$GOFILE -package mocks
+type SerieRepository interface {
 	GetAllSeries() ([]models.Serie, error)
 	AddSerie(models.Serie) (models.Serie, error)
 	FindById(id int) (models.Serie, error)
@@ -15,7 +16,7 @@ type serieRepository interface {
 }
 
 type SerieAPI struct {
-	Repository serieRepository
+	Repository SerieRepository
 }
 
 func (sa SerieAPI) GetAllSeries() ([]models.Serie, error) {

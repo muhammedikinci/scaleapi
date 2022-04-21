@@ -5,14 +5,15 @@ import (
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
-type seasonRepository interface {
+//go:generate mockgen -source $GOFILE -destination ./mocks/mock_$GOFILE -package mocks
+type SeasonRepository interface {
 	AddSeason(s models.Season) (models.Season, error)
 	FindById(id int) (models.Season, error)
 	FindAllSeasonsInSerie(serieId int) ([]models.Season, error)
 }
 
 type SeasonAPI struct {
-	Repository seasonRepository
+	Repository SeasonRepository
 }
 
 func (sa SeasonAPI) AddSeason(sr dtos.SeasonRequest) (models.Season, string, error) {

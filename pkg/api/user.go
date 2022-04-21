@@ -9,7 +9,8 @@ import (
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
-type userRepository interface {
+//go:generate mockgen -source $GOFILE -destination ./mocks/mock_$GOFILE -package mocks
+type UserRepository interface {
 	FindByUserName(username string) (models.User, error)
 	AddUser(username, password string) (models.User, error)
 	AddMovieToFavorite(username string, movie models.Movie) error
@@ -18,10 +19,14 @@ type userRepository interface {
 }
 
 type UserAPI struct {
-	Repository      userRepository
-	MovieRepository movieRepository
-	SerieRepository serieRepository
+	Repository      UserRepository
+	MovieRepository MovieRepository
+	SerieRepository SerieRepository
 }
+
+const ErrUserNotFound = "User not found"
+const ErrCredentialDoesNotMatch = "Credentials does not match"
+const ErrUsernameAlreadyTaken = "Username already taken"
 
 var hmacSampleSecret []byte = []byte("very-secret")
 
@@ -38,14 +43,14 @@ func (ua UserAPI) Login(user dtos.LoginRegisterRequest) (dtos.LoginResponse, err
 	if err != nil {
 		return dtos.LoginResponse{
 			Status:  false,
-			Message: "User not found",
+			Message: ErrUserNotFound,
 		}, nil
 	}
 
 	if !user.CheckPasswordHash(result.Password) {
 		return dtos.LoginResponse{
 			Status:  false,
-			Message: "Credentials does not match",
+			Message: ErrCredentialDoesNotMatch,
 		}, nil
 	}
 
@@ -81,7 +86,7 @@ func (ua UserAPI) Register(user dtos.LoginRegisterRequest) (dtos.RegisterRespons
 	if userCheck.Username != "" {
 		return dtos.RegisterResponse{
 			Status:  false,
-			Message: "Username already taken",
+			Message: ErrUsernameAlreadyTaken,
 		}, nil
 	}
 

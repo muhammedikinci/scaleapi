@@ -5,14 +5,15 @@ import (
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 )
 
-type episodeRepository interface {
+//go:generate mockgen -source $GOFILE -destination ./mocks/mock_$GOFILE -package mocks
+type EpisodeRepository interface {
 	AddEpisode(s models.Episode) (models.Episode, error)
 	FindById(id int) (models.Episode, error)
 	FindAllEpisodesInSeason(serieId int) ([]models.Episode, error)
 }
 
 type EpisodeAPI struct {
-	Repository episodeRepository
+	Repository EpisodeRepository
 }
 
 func (ea EpisodeAPI) AddEpisode(sr dtos.EpisodeRequest) (models.Episode, string, error) {

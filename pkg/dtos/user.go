@@ -2,6 +2,8 @@ package dtos
 
 import "golang.org/x/crypto/bcrypt"
 
+const ErrUsernameAndPasswordLengthError = "Username and password can be minimum 4 characters"
+
 type LoginResponse struct {
 	Status   bool   `json:"status"`
 	Message  string `json:"message"`
@@ -21,7 +23,7 @@ type RegisterResponse struct {
 
 func (lr LoginRegisterRequest) Validate() (string, bool) {
 	if len(lr.Username) < 3 || len(lr.Password) < 3 {
-		return "Username and password can be minimum 4 characters", false
+		return ErrUsernameAndPasswordLengthError, false
 	}
 
 	return "", true
