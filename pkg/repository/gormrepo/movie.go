@@ -5,6 +5,7 @@ import (
 
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type movieRepository struct {
@@ -34,6 +35,23 @@ func (mr movieRepository) AddMovie(m models.Movie) (models.Movie, error) {
 	}
 
 	return m, nil
+}
+
+func (mr movieRepository) RemoveMovie(id int) error {
+	movie, err := mr.FindById(id)
+
+	if err != nil {
+		return err
+	}
+
+	result := mr.db.Select(clause.Associations).Delete(&movie)
+
+	if result.Error != nil {
+		mr.errorLog.Println(result.Error)
+		return result.Error
+	}
+
+	return nil
 }
 
 func (mr movieRepository) FindById(id int) (models.Movie, error) {

@@ -93,3 +93,17 @@ func (mr *MockSerieRepositoryMockRecorder) GetAllSeries() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllSeries", reflect.TypeOf((*MockSerieRepository)(nil).GetAllSeries))
 }
+
+// RemoveSerie mocks base method.
+func (m *MockSerieRepository) RemoveSerie(id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveSerie", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveSerie indicates an expected call of RemoveSerie.
+func (mr *MockSerieRepositoryMockRecorder) RemoveSerie(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSerie", reflect.TypeOf((*MockSerieRepository)(nil).RemoveSerie), id)
+}

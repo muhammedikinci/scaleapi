@@ -11,6 +11,7 @@ import (
 type SerieRepository interface {
 	GetAllSeries() ([]models.Serie, error)
 	AddSerie(models.Serie) (models.Serie, error)
+	RemoveSerie(id int) error
 	FindById(id int) (models.Serie, error)
 	Filter(title string, genre string) ([]models.Serie, error)
 }
@@ -35,6 +36,10 @@ func (sa SerieAPI) AddSerie(s dtos.SerieRequest) (models.Serie, string, error) {
 	}
 
 	return serie, "", nil
+}
+
+func (sa SerieAPI) RemoveSerie(id int) bool {
+	return sa.Repository.RemoveSerie(id) == nil
 }
 
 func (sa SerieAPI) FindById(id int) (models.Serie, error) {

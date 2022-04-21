@@ -12,6 +12,7 @@ import (
 type movieApi interface {
 	GetAllMovies() ([]models.Movie, error)
 	AddMovie(movieDto dtos.MovieRequest) (models.Movie, string, error)
+	RemoveMovie(id int) bool
 	FindById(id int) (models.Movie, error)
 	Filter(title string, genre string) ([]models.Movie, error)
 }
@@ -57,6 +58,31 @@ func (mh movieHandler) AddMovie(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, movie)
+}
+
+func (mh movieHandler) RemoveMovie(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "id parameter is not valid",
+		})
+	}
+
+	status := mh.api.RemoveMovie(id)
+
+	if !status {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "Movie cannot remove",
+		})
+	}
+
+	return c.JSON(http.StatusOK, dtos.ResponseMessage{
+		Status:  true,
+		Message: "Movie removed",
+	})
 }
 
 func (mh movieHandler) FindById(c echo.Context) error {

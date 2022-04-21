@@ -12,6 +12,7 @@ import (
 type serieApi interface {
 	GetAllSeries() ([]models.Serie, error)
 	AddSerie(dtos.SerieRequest) (models.Serie, string, error)
+	RemoveSerie(id int) bool
 	FindById(id int) (models.Serie, error)
 	Filter(title string, genre string) ([]models.Serie, error)
 }
@@ -57,6 +58,31 @@ func (sh serieHandler) AddSerie(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, serie)
+}
+
+func (sh serieHandler) RemoveSerie(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "id parameter is not valid",
+		})
+	}
+
+	status := sh.api.RemoveSerie(id)
+
+	if !status {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "Serie cannot remove",
+		})
+	}
+
+	return c.JSON(http.StatusOK, dtos.ResponseMessage{
+		Status:  true,
+		Message: "Serie removed",
+	})
 }
 
 func (sh serieHandler) FindById(c echo.Context) error {

@@ -11,6 +11,7 @@ import (
 type MovieRepository interface {
 	GetAllMovies() ([]models.Movie, error)
 	AddMovie(models.Movie) (models.Movie, error)
+	RemoveMovie(id int) error
 	FindById(id int) (models.Movie, error)
 	Filter(title string, genre string) ([]models.Movie, error)
 }
@@ -35,6 +36,10 @@ func (ma MovieAPI) AddMovie(movieDto dtos.MovieRequest) (models.Movie, string, e
 	}
 
 	return res, "", nil
+}
+
+func (ma MovieAPI) RemoveMovie(id int) bool {
+	return ma.Repository.RemoveMovie(id) == nil
 }
 
 func (ma MovieAPI) FindById(id int) (models.Movie, error) {

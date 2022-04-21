@@ -5,6 +5,7 @@ import (
 
 	"github.com/muhammedikinci/scaleapi/pkg/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type serieRepository struct {
@@ -34,6 +35,23 @@ func (sr serieRepository) AddSerie(s models.Serie) (models.Serie, error) {
 	}
 
 	return s, nil
+}
+
+func (sr serieRepository) RemoveSerie(id int) error {
+	serie, err := sr.FindById(id)
+
+	if err != nil {
+		return err
+	}
+
+	result := sr.db.Select(clause.Associations).Delete(&serie)
+
+	if result.Error != nil {
+		sr.errorLog.Println(result.Error)
+		return result.Error
+	}
+
+	return nil
 }
 
 func (sr serieRepository) FindById(id int) (models.Serie, error) {

@@ -59,11 +59,13 @@ func main() {
 	e.GET("/movies", movieHandler.GetAllMovies, custom_middleware.UserCheck(userApi))
 	e.GET("/movies/filter", movieHandler.Filter, custom_middleware.UserCheck(userApi))
 	e.GET("/movies/:id", movieHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.DELETE("/movies/:id", movieHandler.RemoveMovie, custom_middleware.AdminCheck(userApi))
 	e.POST("/movies", movieHandler.AddMovie, custom_middleware.AdminCheck(userApi))
 
 	e.GET("/series", serieHandler.GetAllSeries, custom_middleware.UserCheck(userApi))
 	e.GET("/series/filter", serieHandler.Filter, custom_middleware.UserCheck(userApi))
 	e.GET("/series/:id", serieHandler.FindById, custom_middleware.UserCheck(userApi))
+	e.DELETE("/series/:id", serieHandler.RemoveSerie, custom_middleware.AdminCheck(userApi))
 	e.POST("/series", serieHandler.AddSerie, custom_middleware.AdminCheck(userApi))
 
 	e.GET("/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))

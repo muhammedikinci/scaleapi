@@ -93,3 +93,17 @@ func (mr *MockMovieRepositoryMockRecorder) GetAllMovies() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMovies", reflect.TypeOf((*MockMovieRepository)(nil).GetAllMovies))
 }
+
+// RemoveMovie mocks base method.
+func (m *MockMovieRepository) RemoveMovie(id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveMovie", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveMovie indicates an expected call of RemoveMovie.
+func (mr *MockMovieRepositoryMockRecorder) RemoveMovie(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveMovie", reflect.TypeOf((*MockMovieRepository)(nil).RemoveMovie), id)
+}
