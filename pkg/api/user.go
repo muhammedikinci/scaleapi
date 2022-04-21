@@ -16,6 +16,7 @@ type UserRepository interface {
 	AddMovieToFavorite(username string, movie models.Movie) error
 	AddSerieToFavorite(username string, serie models.Serie) error
 	GetFavorites(username string) (models.Favorite, error)
+	GetFilteredFavorites(title, genre, username string) (models.Favorite, error)
 }
 
 type UserAPI struct {
@@ -161,4 +162,8 @@ func (ua UserAPI) AddSerieToFavorite(username string, serieId int) bool {
 
 func (ua UserAPI) GetFavorites(username string) (models.Favorite, error) {
 	return ua.Repository.GetFavorites(username)
+}
+
+func (ua UserAPI) GetFilteredFavorites(title, genre, username string) (models.Favorite, error) {
+	return ua.Repository.GetFilteredFavorites(title, genre, username)
 }

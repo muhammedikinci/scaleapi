@@ -106,3 +106,18 @@ func (mr *MockUserRepositoryMockRecorder) GetFavorites(username interface{}) *go
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFavorites", reflect.TypeOf((*MockUserRepository)(nil).GetFavorites), username)
 }
+
+// GetFilteredFavorites mocks base method.
+func (m *MockUserRepository) GetFilteredFavorites(title, genre, username string) (models.Favorite, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFilteredFavorites", title, genre, username)
+	ret0, _ := ret[0].(models.Favorite)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFilteredFavorites indicates an expected call of GetFilteredFavorites.
+func (mr *MockUserRepositoryMockRecorder) GetFilteredFavorites(title, genre, username interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilteredFavorites", reflect.TypeOf((*MockUserRepository)(nil).GetFilteredFavorites), title, genre, username)
+}

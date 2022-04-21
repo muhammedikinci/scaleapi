@@ -136,6 +136,37 @@ func (ur userRepository) GetFavorites(username string) (models.Favorite, error) 
 	}, nil
 }
 
+func (ur userRepository) GetFilteredFavorites(title, genre, username string) (models.Favorite, error) {
+	user, err := ur.FindByUserName(username)
+
+	if err != nil {
+		ur.errorLog.Println(err)
+		return models.Favorite{}, err
+	}
+
+	series := []models.Serie{}
+	movies := []models.Movie{}
+
+	result := ur.db.Model(&user).Where("LOWER(title) LIKE ? AND LOWER(genre) LIKE ?", wrapLike(title), wrapLike(genre)).Association("SerieFavorites").Find(&series)
+
+	if result != nil {
+		ur.errorLog.Println(result)
+		return models.Favorite{}, result
+	}
+
+	result = ur.db.Model(&user).Where("LOWER(title) LIKE ? AND LOWER(genre) LIKE ?", wrapLike(title), wrapLike(genre)).Association("MovieFavorites").Find(&movies)
+
+	if result != nil {
+		ur.errorLog.Println(result)
+		return models.Favorite{}, result
+	}
+
+	return models.Favorite{
+		Movies: movies,
+		Series: series,
+	}, nil
+}
+
 func (ur userRepository) AddAdmin(username, password string) (models.User, error) {
 	u := models.User{
 		Username: username,

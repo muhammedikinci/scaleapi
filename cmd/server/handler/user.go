@@ -15,6 +15,7 @@ type userApi interface {
 	AddMovieToFavorite(username string, movieId int) bool
 	AddSerieToFavorite(username string, serieId int) bool
 	GetFavorites(username string) (models.Favorite, error)
+	GetFilteredFavorites(title, genre, username string) (models.Favorite, error)
 }
 
 type userHandler struct {
@@ -132,6 +133,28 @@ func (uh userHandler) GetFavorites(c echo.Context) error {
 	}
 
 	favorites, err := uh.api.GetFavorites(username)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dtos.ResponseMessage{
+			Status:  false,
+			Message: "cannot getting customer favorites",
+		})
+	}
+
+	return c.JSON(http.StatusOK, favorites)
+}
+
+func (uh userHandler) GetFilteredFavorites(c echo.Context) error {
+	username := c.Get("username").(string)
+
+	if username == "" {
+		return c.JSON(http.StatusBadRequest, dtos.ResponseMessage{
+			Status:  false,
+			Message: "user not found",
+		})
+	}
+
+	favorites, err := uh.api.GetFilteredFavorites(c.QueryParam("title"), c.QueryParam("genre"), username)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dtos.ResponseMessage{

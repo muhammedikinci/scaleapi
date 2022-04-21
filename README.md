@@ -20,6 +20,7 @@
       </ul>
     </li>
     <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#test">Test</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -196,12 +197,25 @@ curl --request POST \
   --header 'Authorization: Bearer {{TOKEN}}'
 ```
 
-### GET /favorite
+### GET /favorites
 
 ```sh
 curl --request GET \
   --url http://localhost:8080/favorites \
   --header 'Authorization: Bearer {{TOKEN}}'
+```
+
+### GET /favorites/filter?title={{}}&genre={{}}
+
+```sh
+curl --request GET \
+  --url http://localhost:8080/favorite/filter?title={{}}&genre={{}} \
+  --header 'Authorization: Bearer {{TOKEN}}'
+```
+
+## Test
+```sh
+go test ./...
 ```
 
 ## Contact

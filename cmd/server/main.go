@@ -80,6 +80,7 @@ func main() {
 	e.POST("/register", userHandler.Register)
 
 	e.GET("/favorites", userHandler.GetFavorites, custom_middleware.UserCheck(userApi))
+	e.GET("/favorites/filter", userHandler.GetFilteredFavorites, custom_middleware.UserCheck(userApi))
 	e.POST("/favorite_movie/:id", userHandler.AddMovieToFavorite, custom_middleware.UserCheck(userApi))
 	e.POST("/favorite_serie/:id", userHandler.AddSerieToFavorite, custom_middleware.UserCheck(userApi))
 
