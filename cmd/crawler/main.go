@@ -45,6 +45,15 @@ func main() {
 		Repository: repository.Episode,
 	}
 
+	user := dtos.LoginRegisterRequest{
+		Username: "muhammed",
+		Password: "1234",
+	}
+
+	user.HashPassword()
+
+	repository.User.AddAdmin(user.Username, user.Password)
+
 	getSeries(serieApi, seasonApi, episodeApi)
 	getMovies(movieApi)
 }

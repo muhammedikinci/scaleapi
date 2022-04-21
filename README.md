@@ -50,6 +50,8 @@
 
 - Crawler project will terminate automatically after writing all movies and series that get from other APIs to the database
 
+- Crawler will add admin user to database, credentials: muhammed:1234
+
 - If you want to start the project without Crawler, you can use the base docker-compose file in the project
     ```sh
    docker compose -p "scaleflix_without_data" -f .\docker-compose.yml up

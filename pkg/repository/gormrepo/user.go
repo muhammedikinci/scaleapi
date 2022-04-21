@@ -135,3 +135,20 @@ func (ur userRepository) GetFavorites(username string) (models.Favorite, error) 
 		Series: series,
 	}, nil
 }
+
+func (ur userRepository) AddAdmin(username, password string) (models.User, error) {
+	u := models.User{
+		Username: username,
+		Password: password,
+		Role:     models.ContentManager,
+	}
+
+	result := ur.db.Create(&u)
+
+	if result.Error != nil {
+		ur.errorLog.Println(result.Error)
+		return models.User{}, result.Error
+	}
+
+	return u, nil
+}
