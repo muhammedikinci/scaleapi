@@ -15,6 +15,8 @@ import (
 func main() {
 	dsn := flag.String("dsn", "host=localhost user=postgres password=postgres dbname=scaleflix", "Database Connection String")
 
+	flag.Parse()
+
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
 
@@ -65,21 +67,21 @@ func main() {
 	e.POST("/series", serieHandler.AddSerie, custom_middleware.AdminCheck(userApi))
 
 	e.GET("/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))
-	e.GET("/series/:serieId/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.GET("/series/:serieId/seasons", seasonHandler.FindAllSeasonsInSerie, custom_middleware.UserCheck(userApi))
+	e.GET("/series/:serieId/seasons/:id", seasonHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.POST("/seasons", seasonHandler.AddSeason, custom_middleware.AdminCheck(userApi))
 
 	e.GET("/episodes/:id", episodeHandler.FindById, custom_middleware.UserCheck(userApi))
-	e.GET("/seasons/:seasonId/episodes/:id", episodeHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.GET("/seasons/:seasonId/episodes", episodeHandler.FindAllEpisodesInSeason, custom_middleware.UserCheck(userApi))
+	e.GET("/seasons/:seasonId/episodes/:id", episodeHandler.FindById, custom_middleware.UserCheck(userApi))
 	e.POST("/episodes", episodeHandler.AddEpisode, custom_middleware.AdminCheck(userApi))
 
 	e.POST("/login", userHandler.Login)
 	e.POST("/register", userHandler.Register)
 
+	e.GET("/favorites", userHandler.GetFavorites, custom_middleware.UserCheck(userApi))
 	e.POST("/favorite_movie/:id", userHandler.AddMovieToFavorite, custom_middleware.UserCheck(userApi))
 	e.POST("/favorite_serie/:id", userHandler.AddSerieToFavorite, custom_middleware.UserCheck(userApi))
-	e.GET("/favorites", userHandler.GetFavorites, custom_middleware.UserCheck(userApi))
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

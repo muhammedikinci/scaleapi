@@ -13,6 +13,17 @@ services:
     restart: on-failure
     depends_on:
       - db
+  crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile.crawler
+      args:
+        USER: postgres
+        PASSWORD: postgres
+        DATABASE: scaleflix
+    restart: on-failure
+    depends_on:
+      - db
   db:
     image: postgres
     restart: always
